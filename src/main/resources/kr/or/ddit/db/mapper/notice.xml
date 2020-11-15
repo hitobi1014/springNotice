@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="notice">
+
+	<!-- 게시판 페이징처리를 위한 게시판별 글 갯수 구하기 -->
+	<select id="noticeTotalCnt" parameterType="String" resultType="Integer">
+		SELECT COUNT(*) FROM mini_notice WHERE ntgu_code=#{ntgu_code}
+	</select>
+	
+	<!-- 페이지 처리 -->
+	<select id="getAllNoticePage"  resultType="NoticeVo" parameterType="hashMap">
+	  	SELECT * FROM(
+	    	SELECT ROWNUM AS rn , a.* 
+	    	FROM (
+	         		SELECT mini_notice.*, LEVEL
+					FROM mini_notice
+					WHERE NTGU_CODE=#{ntgu_code}
+					START WITH nt_panum = 0
+					CONNECT BY nt_panum = PRIOR nt_num
+					ORDER SIBLINGS BY nt_num DESC) a)
+		WHERE rn BETWEEN (#{page} - 1) * #{pageSize} + 1  AND #{page} * #{pageSize}
+  	</select>
+	
+	<!-- 게시판 분류 전체가져오기  -->
+	<select id="getAllNoticeGubun" resultType="NoticeGubunVo">
+		SELECT * FROM notice_gubun
+	</select>  
+	
+	<!-- 게시판 생성 -->
+	<insert id="insertNoticeGubun" parameterType="NoticeGubunVo">
+		INSERT INTO notice_gubun VALUES(UPPER(#{ntgu_code}), ntgu_seq.nextval,#{ntgu_name}, #{ntgu_stat})
+	</insert>
+	
+	<!-- 게시판 상태 변경 -->
+	<update id="updateNoticeGubun" parameterType="NoticeGubunVo">
+		UPDATE notice_gubun SET ntgu_stat = #{ntgu_stat} WHERE ntgu_code=upper(#{ntgu_code})
+	</update>
+	
+		<!-- 게시글 전체 가져오기  -->
+<!-- 	<select id="getAllNotice" parameterType="String" resultType="NoticeVo"> -->
+<!-- 		SELECT * FROM MINI_NOTICE WHERE NTGU_CODE=#{ntgu_code} ORDER BY NT_NUM DESC -->
+<!-- 	</select> -->
+	
+	<!-- 계층형 게시글 전체 가져오기  -->
+	<select id="getAllNotice" parameterType="String" resultType="NoticeVo">
+		SELECT mini_notice.*, LEVEL
+		FROM mini_notice
+		WHERE NTGU_CODE=#{ntgu_code}
+		START WITH nt_panum = 0
+		CONNECT BY nt_panum = PRIOR nt_num
+		ORDER SIBLINGS BY nt_num DESC
+	</select>
+	
+	<!-- 특정 게시판분류 가져오기  -->
+	<select id="getNoticeGubun" parameterType="String" resultType="NoticeGubunVo">
+		SELECT * FROM NOTICE_GUBUN WHERE NTGU_CODE=#{ntgu_code}
+	</select>
+	
+	<!-- 게시글 상세정보 가져오기 -->
+	<select id="getNotice" parameterType="Integer" resultType="NoticeVo">
+		SELECT * FROM MINI_NOTICE WHERE NT_NUM=#{nt_num}
+	</select>
+	
+	<!-- 댓글 가져오기 -->
+	<select id="getAllReply" parameterType="Integer" resultType="ReplyVo">
+		SELECT * FROM NT_REPLY WHERE NT_NUM=#{nt_num} ORDER BY REP_NUM DESC
+	</select>
+	
+	<!-- 게시글 작성 -->
+	<insert id="insertNotice" parameterType="NoticeVo">
+		INSERT INTO MINI_NOTICE	VALUES
+		(	NOTICE_SEQ.NEXTVAL,	
+			#{ntgu_code},
+			#{user_id},
+			#{nt_stat},
+			#{ntcont_stat},
+			sysdate,
+			#{nt_title},
+			#{nt_panum,jdbcType=NUMERIC},
+<!-- 			<choose> -->
+<!-- 				<when test="nt_panum !=null">#{nt_panum},</when> -->
+<!-- 				<otherwise>null,</otherwise> -->
+<!-- 			</choose> -->
+			#{nt_cont}
+			 )
+		<selectKey keyProperty="nt_num" resultType="Integer">
+			SELECT NOTICE_SEQ.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+	
+	<!-- 게시글삭제(글 상태코드 수정) -->
+	<update id="deleteNotice" parameterType="hashMap">
+		UPDATE MINI_NOTICE SET NTCONT_STAT=0 WHERE user_id=#{user_id} and nt_num = #{nt_num}
+	</update>
+	
+	<!-- 게시글 수정 -->
+	<update id="updateNotice" parameterType="NoticeVo">
+		UPDATE MINI_NOTICE 
+		SET NTGU_CODE=#{ntgu_code}, NT_DT=SYSDATE, 
+			NT_CONT =#{nt_cont}, NT_TITLE = #{nt_title}, 
+			<choose>
+				<when test="nt_panum !=null">NT_PANUM = #{nt_panum}</when>
+				<otherwise>NT_PANUM =''</otherwise>
+			</choose>
+		WHERE NT_NUM=#{nt_num}
+	</update>
+	
+	<!-- 댓글 작성 -->
+	<insert id="insertReply" parameterType="ReplyVo">
+		INSERT INTO NT_REPLY 
+				VALUES(REP_SEQ.NEXTVAL, 
+						#{nt_num},
+						#{rep_stat},
+						SYSDATE,
+						#{rep_cont},
+						#{user_id})
+	</insert>
+	
+	<!-- 댓글 삭제 -->
+	<update id="deleteReply" parameterType="ReplyVo">
+		UPDATE nt_reply SET rep_stat=#{rep_stat} 
+		WHERE rep_num=#{rep_num} AND user_id = #{user_id}
+	</update>
+	
+	<!-- 댓글 수정 -->
+	<update id="updateReply" parameterType="ReplyVo">
+		UPDATE NT_REPLY SET REP_DT = SYSDATE, REP_CONT = #{rep_cont} WHERE REP_NUM=#{rep_num} AND USER_ID=#{user_id}
+	</update>
+	
+	<!-- 파일등록 -->
+	<insert id="insertFile" parameterType="NoticeFileVo">
+		INSERT INTO nt_file 
+		VALUES(FILE_SEQ.NEXTVAL, #{nt_num}, #{filename}, #{filepath})
+	</insert>
+	
+	<!-- 게시글 파일 조회 -->
+	<select id="getAllFile" resultType="NoticeFileVo">
+		SELECT * FROM nt_file WHERE nt_num=#{nt_num}
+	</select>
+	
+	<!-- 파일 번호로 조회 -->
+	<select id="getFile" resultType="NoticeFileVo" parameterType="NoticeFileVo">
+		SELECT * FROM nt_file WHERE filenum=#{filenum}
+	</select>
+	
+	<!-- 파일삭제 -->
+	<delete id="deleteFile" parameterType="Integer">
+		DELETE FROM nt_file WHERE filenum=#{filenum}
+	</delete>
+	
+	<!-- 게시글 삭제시 파일 삭제  -->
+	<delete id="deleteAllFile" parameterType="Integer">
+		DELETE FROM nt_file WHERE nt_num=#{nt_num}
+	</delete>
+	
+</mapper>
