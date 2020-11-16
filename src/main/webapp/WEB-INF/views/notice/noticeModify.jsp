@@ -42,23 +42,10 @@ $(document).ready(function(){
 		$(this).parent().hide();
 		var num = $(this).next("input[class='num']").val()
 		console.log(num);
-// 		$(this).parent().append("<input type='hidden' value='${nfvo.filenum}' name='fileDel'/>");
 		var scr = "<input type='hidden' value='"+num+"' name='fileDel'/>";
 		$(this).parent().append(scr);
 	})
 
-	var i = $('.divdel').length;
-	$('#fileAddBtn').on('click',function(){
-		if(i>=5){
-			alert('파일은 최대 5개까지 첨부가능합니다');
-		}else{
-			i++;
-			$('.fileAdd[name=nt_file'+i+']').show();
-			console.log('i값 : '+i);
-		}
-	})
-
-	$('.fileAdd').hide();
 })
 </script>
 
@@ -67,13 +54,11 @@ $(document).ready(function(){
 		<h2>글쓰기</h2>
 	</div>
 	<div>
-		<form method="post" action="${cp}/noticeModify" id="frm"
-			enctype="multipart/form-data">
-			<input type="hidden" value="${S_MEMBER.user_id}" name="user_id"
-				id="user_id" /> <input type="hidden" value="${nvo.nt_num}"
-				name="nt_num" />
+		<form method="post" action="${cp}/notice/modify" id="frm" enctype="multipart/form-data">
+			<input type="hidden" value="${S_MEMBER.user_id}" name="user_id" id="user_id" /> 
+			<input type="hidden" value="${nvo.nt_num}" name="nt_num" />
 			<div>
-				<select id="selectNotice" name="noticeGubun">
+				<select id="selectNotice" name="ntgu_code">
 					<!-- 									<option selected="selected">게시판을 선택해주세요</option> -->
 					<c:forEach items="${noticeGubun}" var="noticeGubun">
 						<c:choose>
@@ -88,13 +73,12 @@ $(document).ready(function(){
 				</select>
 			</div>
 			<div>
-				<input type="text" id="title" placeholder="제목을 입력해주세요" name="title"
+				<input type="text" id="title" placeholder="제목을 입력해주세요" name="nt_title"
 					value="${nvo.nt_title }" />
 				<button id="subBtn" type="submit">등록</button>
 			</div>
 			<textarea id="summernote" name="editordata">${nvo.nt_cont}</textarea>
 			<div class="filediv">
-				<button type="button" id="fileAddBtn">파일추가</button>
 				<c:if test="${nfvoList !=null }">
 					<c:forEach items="${nfvoList}" var="nfvo">
 						<div class="divdel">
@@ -104,11 +88,7 @@ $(document).ready(function(){
 						</div>
 					</c:forEach>
 				</c:if>
-				<input class="fileAdd" type="file" name="nt_file1" /> <input
-					class="fileAdd" type="file" name="nt_file2" /> <input
-					class="fileAdd" type="file" name="nt_file3" /> <input
-					class="fileAdd" type="file" name="nt_file4" /> <input
-					class="fileAdd" type="file" name="nt_file5" />
+				<input multiple="multiple" class="fileAdd" type="file" name="nt_file" value="파일추가" />
 			</div>
 		</form>
 	</div>

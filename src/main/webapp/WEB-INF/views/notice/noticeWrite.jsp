@@ -43,18 +43,6 @@ $(document).ready(function(){
 		$('#frm').submit();
 	})
 
-	var i = 1;
-	$('#fileAddBtn').on('click',function(){
-		console.log('i값 : '+i);
-		if(i>5){
-			alert('파일은 최대 5개까지 첨부가능합니다');
-		}else{
-			$('.fileAdd[name=nt_file'+i+']').show();
-			i++;
-		}
-	})
-	
-	$('.fileAdd').hide();
 })
 </script>
 
@@ -63,12 +51,10 @@ $(document).ready(function(){
 		<h2>글쓰기</h2>
 	</div>
 	<div>
-		<form method="post" action="${cp}/noticeWrite" id="frm"
-			enctype="multipart/form-data">
-			<input type="hidden" value="${S_MEMBER.user_id}" name="user_id"
-				id="user_id" />
+		<form method="post" action="${cp}/notice/write" id="frm" enctype="multipart/form-data">
+			<input type="hidden" value="${S_MEMBER.user_id}" name="user_id" id="user_id" />
 			<div>
-				<select id="selectNotice" name="noticeGubun">
+				<select id="selectNotice" name="ntgu_code">
 					<option selected="selected">게시판을 선택해주세요</option>
 					<c:forEach items="${noticeGubun}" var="noticeGubun">
 						<c:if test="${noticeGubun.ntgu_stat ==1 }">
@@ -78,17 +64,17 @@ $(document).ready(function(){
 				</select>
 			</div>
 			<div>
-				<input type="text" id="title" placeholder="제목을 입력해주세요" name="title" />
+				<input type="text" id="title" placeholder="제목을 입력해주세요" name="nt_title" />
 				<button id="subBtn" type="submit">등록</button>
 			</div>
 			<textarea id="summernote" name="editordata"></textarea>
 			<div class="filediv">
-				<button type="button" id="fileAddBtn">파일추가</button>
-				<input class="fileAdd" type="file" name="nt_file1" /> <input
-					class="fileAdd" type="file" name="nt_file2" /> <input
-					class="fileAdd" type="file" name="nt_file3" /> <input
-					class="fileAdd" type="file" name="nt_file4" /> <input
-					class="fileAdd" type="file" name="nt_file5" />
+<!-- 				<button type="button" id="fileAddBtn">파일추가</button> -->
+				<input multiple="multiple" class="fileAdd" type="file" name="nt_file" value="파일추가"/> 
+<!-- 				<input class="fileAdd" type="file" name="nt_file2" />  -->
+<!-- 				<input class="fileAdd" type="file" name="nt_file3" />  -->
+<!-- 				<input class="fileAdd" type="file" name="nt_file4" />  -->
+<!-- 				<input class="fileAdd" type="file" name="nt_file5" /> -->
 			</div>
 		</form>
 	</div>

@@ -65,7 +65,7 @@
 				+ "	<input type='hidden' value='"+rep_num+"' name='repnum'/>"
 				+ "	<input type='hidden' value='${nvo.nt_num }' name='replyNtnum' />"
 				+ "	<textarea name='replyCont'>"
-				+ cont
+				+ cont	
 				+ "</textarea><br>"
 				+ "	<p style='float:right'><button type='submit'>등록</button></p>"
 				+ "	<p style='float:right'><button type='button' onclick='location.reload()'>취소</button></p>"
@@ -93,8 +93,7 @@
 		<div style="float: right">
 			<c:if test="${nfvoList !=null }">
 				<c:forEach items="${nfvoList}" var="nfvo">
-					<button type="button" id="fileDownload"
-						onclick="location.href='${cp}/fileDownload?filenum=${nfvo.filenum}'">첨부파일
+					<button type="button" id="fileDownload" onclick="location.href='${cp}/notice/fileDownload?filenum=${nfvo.filenum}'">첨부파일
 						: ${nfvo.filename}</button>
 				</c:forEach>
 			</c:if>
@@ -102,7 +101,7 @@
 		<p style="font-size: 1.2em">${nvo.nt_cont}</p>
 	</div>
 	<hr>
-	<a href="${cp}/noticeAnswer?ntnum=${nvo.nt_num}"><span>답글쓰기</span></a>
+	<a href="${cp}/notice/answer?nt_num=${nvo.nt_num}"><span>답글쓰기</span></a>
 	<br> <br>
 
 	<!-- 댓글목록 -->
@@ -124,13 +123,9 @@
 			<input type="hidden" value="${reply.rep_num }" name="repnum"
 				class="repnum" />
 			<c:if test="${S_MEMBER.user_id == reply.user_id }">
-				<span class="date"><fmt:formatDate value="${reply.rep_dt}"
-						pattern="yyyy-MM-dd HH:mm:ss" /></span> &nbsp;
-									<c:if test="${reply.rep_stat ==1 }">
-					<span><a href="#" class="repMod" value="${reply.rep_num}"
-						val="${reply.rep_cont}">수정</a></span>
-					<span><a
-						href="${cp}/replyDelete?userid=${reply.user_id}&repnum=${reply.rep_num}&ntnum=${nvo.nt_num}">삭제</a></span>
+				<span class="date"><fmt:formatDate value="${reply.rep_dt}" pattern="yyyy-MM-dd HH:mm:ss" /></span> &nbsp; <c:if test="${reply.rep_stat ==1 }">
+					<span><a href="#" class="repMod" value="${reply.rep_num}" val="${reply.rep_cont}">수정</a></span>
+					<span><a href="${cp}/reply/delete?user_id=${reply.user_id}&rep_num=${reply.rep_num}&nt_num=${nvo.nt_num}">삭제</a></span>
 				</c:if>
 			</c:if>
 		</div>
@@ -142,10 +137,10 @@
 		<p class="userid">
 			<c:if test="${S_MEMBER.user_id != null }">${S_MEMBER.user_id}</c:if>
 		</p>
-		<form method="post" action="${cp}/reply">
-			<input type="hidden" value="${S_MEMBER.user_id}" name="replyuserid" />
-			<input type="hidden" value="${nvo.nt_num }" name="replyNtnum" />
-			<textarea name="replyCont"></textarea>
+		<form method="post" action="${cp}/reply/write">
+			<input type="hidden" value="${S_MEMBER.user_id}" name="user_id" />
+			<input type="hidden" value="${nvo.nt_num }" name="nt_num" />
+			<textarea name="rep_cont"></textarea>
 			<br>
 			<p style="float: right">
 				<button type="submit">등록</button>
@@ -157,10 +152,8 @@
 	<div>
 		<c:if test="${S_MEMBER.user_id == nvo.user_id}">
 			<p id="modBtn">
-				<a class="btn btn-default pull-right"
-					href="${cp }/noticeModify?userid=${nvo.user_id}&ntnum=${nvo.nt_num}">수정</a>
-				<a class="btn btn-default pull-right"
-					href="${cp }/noticeDelete?ntgu=${nvo.ntgu_code}&userid=${nvo.user_id}&ntnum=${nvo.nt_num}">삭제</a>
+				<a class="btn btn-default pull-right" href="${cp }/notice/modify?user_id=${nvo.user_id}&nt_num=${nvo.nt_num}">수정</a>
+				<a class="btn btn-default pull-right" href="${cp }/notice/delete?ntgu_code=${nvo.ntgu_code}&user_id=${nvo.user_id}&nt_num=${nvo.nt_num}">삭제</a>
 			</p>
 		</c:if>
 	</div>

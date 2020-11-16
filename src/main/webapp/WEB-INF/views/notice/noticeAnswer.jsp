@@ -65,27 +65,21 @@
 		<h2>${nt_panum}번게시글 : 답글쓰기</h2>
 	</div>
 	<div>
-		<form method="post" action="${cp}/noticeAnswer" id="frm"
-			enctype="multipart/form-data">
-			<input type="hidden" value="${S_MEMBER.user_id}" name="user_id"
-				id="user_id" />
+		<form method="post" action="${cp}/notice/answer" id="frm" enctype="multipart/form-data">
+			<input type="hidden" value="${S_MEMBER.user_id}" name="user_id" id="user_id" />
 			<div>
-				<select id="selectNotice" name="noticeGubun">
+				<input type="hidden" value="${nt_panum}" name="nt_panum"/>
+				<select id="selectNotice" name="ntgu_code">
 					<option selected="selected" value="${ngvo.ntgu_code}">${ngvo.ntgu_name}</option>
 				</select>
 			</div>
 			<div>
-				<input type="text" id="title" placeholder="제목을 입력해주세요" name="title" />
+				<input type="text" id="title" placeholder="제목을 입력해주세요" name="nt_title" />
 				<button id="subBtn" type="submit">등록</button>
 			</div>
 			<textarea id="summernote" name="editordata"></textarea>
 			<div class="filediv">
-				<button type="button" id="fileAddBtn">파일추가</button>
-				<input class="fileAdd" type="file" name="nt_file1" />
-				<!-- 								<input class="fileAdd" type="file" name="nt_file2"/> -->
-				<!-- 								<input class="fileAdd" type="file" name="nt_file3"/> -->
-				<!-- 								<input class="fileAdd" type="file" name="nt_file4"/> -->
-				<!-- 								<input class="fileAdd" type="file" name="nt_file5"/> -->
+				<input class="fileAdd" type="file" name="nt_file" value="파일추가"/>
 			</div>
 		</form>
 	</div>

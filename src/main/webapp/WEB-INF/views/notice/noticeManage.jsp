@@ -11,7 +11,7 @@
 </style>
 <div class="col-sm-8 blog-main">
 	<h2 class="sub-header">게시판관리</h2>
-	<form action="${cp}/noticeGubunInsert" method="post">
+	<form action="${cp}/manage/insert" method="post">
 		<input type="text" id="ntgu_code" name="ntgu_code" placeholder="게시판코드" />
 		<input type="text" id="ntgu_name" name="ntgu_name" placeholder="게시판이름" />
 		<button type="submit">게시판 생성</button>
@@ -26,12 +26,12 @@
 			</tr>
 			<tbody id="noticeGubunList">
 				<c:forEach items="${noticeGubun}" var="nogu">
-					<form action="${cp}/noticeGubunModify" method="post">
+					<form action="${cp}/manage/modify" method="post">
 						<tr>
 							<input type="hidden" value="${nogu.ntgu_code}" name="ntgu_code" />
 							<td>${nogu.ntgu_code}</td>
 							<td>${nogu.ntgu_name}</td>
-							<td><select name="noticeUse">
+							<td><select name="ntgu_stat">
 									<c:if test="${nogu.ntgu_stat==1 }">
 										<option value="1" selected="selected">사용중</option>
 										<option value="0">미사용</option>

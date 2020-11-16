@@ -11,19 +11,19 @@
 				<span class="icon-bar"></span> 
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="${cp}/main">JSP/SPRING 
+			<a class="navbar-brand" href="${cp}/main/mainPage">JSP/SPRING 
 				<c:if test="${S_MEMBER.user_id != null }">[${S_MEMBER.user_id} 님 환영합니다]</c:if>
 			</a>
 		</div>
 		<div id="navbar" class="navbar-collapse collapse">
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="${cp}/noticeManage">게시판관리</a></li>
+				<li><a href="${cp}/manage/noti">게시판관리</a></li>
 				<c:choose>
 					<c:when test="${S_MEMBER.user_id != null }">
-						<li><a href="${cp}/logout">로그아웃</a></li>
+						<li><a href="${cp}/main/logout">로그아웃</a></li>
 					</c:when>
 					<c:otherwise>
-						<li><a href="${cp}/login">로그인</a></li>
+						<li><a href="${cp}/main/login">로그인</a></li>
 					</c:otherwise>
 				</c:choose>
 			</ul>
