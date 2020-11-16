@@ -74,20 +74,24 @@ public class NoticeController {
 		int insertCnt = noticeService.insertNotice(ngvo);
 		int nt_num = ngvo.getNt_num();
 		List<MultipartFile> fileList = multiReq.getFiles("nt_file");
-		for(MultipartFile file : fileList) {
-			String fileName = UUID.randomUUID().toString();
-			String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
-			String filepath = "d:\\upload\\"+fileName + "."+extension;
-			File uploadFile = new File(filepath);
-			try {
-				file.transferTo(uploadFile);
-				NoticeFileVo nfvo = new NoticeFileVo();
-				nfvo.setFilename(file.getOriginalFilename());
-				nfvo.setFilepath(filepath);
-				nfvo.setNt_num(nt_num);
-				noticeService.insertFile(nfvo);
-			} catch (IllegalStateException | IOException e) {
-				e.printStackTrace();
+		if(fileList != null && !fileList.equals("")) {
+			for(MultipartFile file : fileList) {
+				String fileName = UUID.randomUUID().toString();
+				String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
+				String filepath = "d:\\upload\\"+fileName + "."+extension;
+				File uploadFile = new File(filepath);
+				if(file.getSize() > 0) {
+					try {
+						file.transferTo(uploadFile);
+						NoticeFileVo nfvo = new NoticeFileVo();
+						nfvo.setFilename(file.getOriginalFilename());
+						nfvo.setFilepath(filepath);
+						nfvo.setNt_num(nt_num);
+						noticeService.insertFile(nfvo);
+					} catch (IllegalStateException | IOException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 		
@@ -133,20 +137,24 @@ public class NoticeController {
 		}
 		
 		List<MultipartFile> fileList = multiReq.getFiles("nt_file");
-		for(MultipartFile file : fileList) {
-			String fileName = UUID.randomUUID().toString();
-			String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
-			String filepath = "d:\\upload\\"+fileName + "."+extension;
-			File uploadFile = new File(filepath);
-			try {
-				file.transferTo(uploadFile);
-				NoticeFileVo nfvo = new NoticeFileVo();
-				nfvo.setFilename(file.getOriginalFilename());
-				nfvo.setFilepath(filepath);
-				nfvo.setNt_num(nvo.getNt_num());
-				noticeService.insertFile(nfvo);
-			} catch (IllegalStateException | IOException e) {
-				e.printStackTrace();
+		if(fileList != null && !fileList.equals("")) {
+			for(MultipartFile file : fileList) {
+				String fileName = UUID.randomUUID().toString();
+				String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
+				String filepath = "d:\\upload\\"+fileName + "."+extension;
+				File uploadFile = new File(filepath);
+				if(file.getSize() > 0) {
+					try {
+						file.transferTo(uploadFile);
+						NoticeFileVo nfvo = new NoticeFileVo();
+						nfvo.setFilename(file.getOriginalFilename());
+						nfvo.setFilepath(filepath);
+						nfvo.setNt_num(nvo.getNt_num());
+						noticeService.insertFile(nfvo);
+					} catch (IllegalStateException | IOException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 		return "redirect:/noticeGubun/gubun?ntgu_code="+nvo.getNtgu_code();

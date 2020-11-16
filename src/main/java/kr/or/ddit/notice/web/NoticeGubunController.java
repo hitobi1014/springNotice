@@ -27,7 +27,6 @@ public class NoticeGubunController {
 	public String gubunView(NoticeGubunVo ntgu, Model model,
 			@RequestParam(name="page", required = false, defaultValue = "1")int page,
 			@RequestParam(name="pageSize", required = false, defaultValue = "7")int pageSize) {
-//		logger.debug("게시판 구분코드 : {}",ntgu);
 		logger.debug("페이지 : {}",page);
 		PageVO pageVo = new PageVO(page, pageSize);
 		Map<String, Object> info = new HashMap<String, Object>();

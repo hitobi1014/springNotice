@@ -91,10 +91,9 @@
 	<br>
 	<div class="table-responsive">
 		<div style="float: right">
-			<c:if test="${nfvoList !=null }">
+			<c:if test="${nfvoList !=null && nfvoList != ''}">
 				<c:forEach items="${nfvoList}" var="nfvo">
-					<button type="button" id="fileDownload" onclick="location.href='${cp}/notice/fileDownload?filenum=${nfvo.filenum}'">첨부파일
-						: ${nfvo.filename}</button>
+					<button type="button" id="fileDownload" onclick="location.href='${cp}/notice/fileDownload?filenum=${nfvo.filenum}'">첨부파일 : ${nfvo.filename}</button>
 				</c:forEach>
 			</c:if>
 		</div>

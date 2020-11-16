@@ -23,11 +23,13 @@
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/target/generated-sources/annotations"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/resources"/>
                                 
         
         
         <property name="java-output-path" value="/SpringNotice/target/classes"/>
-        <property name="context-root" value="spring"/>
+        <property name="context-root" value="/"/>
                             
     
     
