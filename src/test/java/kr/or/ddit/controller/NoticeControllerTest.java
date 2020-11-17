@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.servlet.ModelAndView;
 
 import kr.or.ddit.WebTestConfig;
+import kr.or.ddit.notice.model.NoticeVo;
 
 public class NoticeControllerTest extends WebTestConfig{
 
@@ -33,16 +34,26 @@ public class NoticeControllerTest extends WebTestConfig{
 	}
 	
 	@Test
-	public void noticeWriteTest() throws Exception {
-		String ntgu_code = "NT001";
-		MvcResult result = mockMvc.perform(post("/notice/write").
-					param("user_id", "a001")
-					.param("ntgu_code", ntgu_code)
-					.param("nt_tile", "제목")
-					.param("editordata", "가나다람"))
+	public void noticeDeleteTest() throws Exception {
+		String ntgu_code = "NT003";
+		MvcResult result = mockMvc.perform(get("/notice/delete")
+						.param("user_id", "a001")
+						.param("nt_num", "9")
+						.param("ntgu_code", ntgu_code))
 				.andExpect(status().is3xxRedirection())
 				.andReturn();
 		ModelAndView mav = result.getModelAndView();
 		assertEquals("redirect:/noticeGubun/gubun?ntgu_code="+ntgu_code, mav.getViewName());
 	}
+	
+	@Test
+	public void noticeModifyViewTest() throws Exception {
+		MvcResult result = mockMvc.perform(get("/notice/modify")
+						.param("nt_num", "9"))
+				.andExpect(status().isOk())
+				.andReturn();
+		ModelAndView mav = result.getModelAndView();
+		assertEquals("tiles/notice/noticeModify", mav.getViewName());
+	}
+	
 }
